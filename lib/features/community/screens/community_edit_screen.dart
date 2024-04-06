@@ -47,15 +47,17 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
           bannerPic: bannerFile,
           context: context,
           community: community,
-        );
+        ); 
   }
 
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(communityControllerProvider);
+    final currTheme = ref.watch(themeNotifierProvider);
+
     return ref.watch(getCommunityByNameProvider(widget.name)).when(
           data: (community) => Scaffold(
-            backgroundColor: Pallete.darkModeAppTheme.colorScheme.background,
+            backgroundColor: currTheme.colorScheme.background,
             appBar: AppBar(
               title: const Text("Edit Community"),
               actions: [
@@ -80,7 +82,7 @@ class _EditCommunityScreenState extends ConsumerState<EditCommunityScreen> {
                               dashPattern: const [10, 4],
                               borderType: BorderType.RRect,
                               strokeCap: StrokeCap.round,
-                              color: Pallete.darkModeAppTheme.textTheme
+                              color: currTheme.textTheme
                                   .bodyMedium!.color!,
                               strokeWidth: 1.4,
                               child: Container(
