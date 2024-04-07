@@ -83,6 +83,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
   Widget build(BuildContext context) {
     final isTypeImage = widget.type == "image";
     final currTheme = ref.watch(themeNotifierProvider);
+    final isLoading = ref.watch(postControllerProvider);
 
     final isTypeText = widget.type == "text";
     final isTypeLink = widget.type == "link";
@@ -97,123 +98,125 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: titleController,
-              maxLength: 30,
-              decoration: InputDecoration(
-                focusedBorder: borderTheme,
-                enabledBorder: borderTheme,
-                errorBorder: borderTheme,
-                disabledBorder: borderTheme,
-                focusedErrorBorder: borderTheme,
-                filled: true,
-                hintText: "Enter Title here",
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.all(18),
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            if (isTypeImage)
-              GestureDetector(
-                onTap: selectBannerImage,
-                child: DottedBorder(
-                  radius: const Radius.circular(15),
-                  dashPattern: const [10, 4],
-                  borderType: BorderType.RRect,
-                  strokeCap: StrokeCap.round,
-                  color: currTheme.textTheme.bodyMedium!.color!,
-                  strokeWidth: 1.4,
-                  child: Container(
-                    width: double.infinity,
-                    height: 150,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(16)),
-                    child: bannerFile != null
-                        ? Image.file(bannerFile!)
-                        : const Center(
-                            child: Icon(
-                              Icons.camera_alt_outlined,
-                              size: 40,
-                            ),
-                          ),
+      body: isLoading
+          ? const Loader()
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: titleController,
+                    maxLength: 30,
+                    decoration: InputDecoration(
+                      focusedBorder: borderTheme,
+                      enabledBorder: borderTheme,
+                      errorBorder: borderTheme,
+                      disabledBorder: borderTheme,
+                      focusedErrorBorder: borderTheme,
+                      filled: true,
+                      hintText: "Enter Title here",
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.all(18),
+                    ),
                   ),
-                ),
-              ),
-            if (isTypeText)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: TextField(
-                  maxLines: 5,
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                    focusedBorder: borderTheme,
-                    enabledBorder: borderTheme,
-                    errorBorder: borderTheme,
-                    disabledBorder: borderTheme,
-                    focusedErrorBorder: borderTheme,
-                    filled: true,
-                    hintText: "Enter Description here",
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.all(18),
+                  const SizedBox(
+                    height: 5,
                   ),
-                ),
-              ),
-            if (isTypeLink)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: TextField(
-                  controller: linkController,
-                  decoration: InputDecoration(
-                    focusedBorder: borderTheme,
-                    enabledBorder: borderTheme,
-                    errorBorder: borderTheme,
-                    disabledBorder: borderTheme,
-                    focusedErrorBorder: borderTheme,
-                    filled: true,
-                    hintText: "Enter Description here",
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.all(18),
+                  if (isTypeImage)
+                    GestureDetector(
+                      onTap: selectBannerImage,
+                      child: DottedBorder(
+                        radius: const Radius.circular(15),
+                        dashPattern: const [10, 4],
+                        borderType: BorderType.RRect,
+                        strokeCap: StrokeCap.round,
+                        color: currTheme.textTheme.bodyMedium!.color!,
+                        strokeWidth: 1.4,
+                        child: Container(
+                          width: double.infinity,
+                          height: 150,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16)),
+                          child: bannerFile != null
+                              ? Image.file(bannerFile!)
+                              : const Center(
+                                  child: Icon(
+                                    Icons.camera_alt_outlined,
+                                    size: 40,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  if (isTypeText)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: TextField(
+                        maxLines: 5,
+                        controller: descriptionController,
+                        decoration: InputDecoration(
+                          focusedBorder: borderTheme,
+                          enabledBorder: borderTheme,
+                          errorBorder: borderTheme,
+                          disabledBorder: borderTheme,
+                          focusedErrorBorder: borderTheme,
+                          filled: true,
+                          hintText: "Enter Description here",
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(18),
+                        ),
+                      ),
+                    ),
+                  if (isTypeLink)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: TextField(
+                        controller: linkController,
+                        decoration: InputDecoration(
+                          focusedBorder: borderTheme,
+                          enabledBorder: borderTheme,
+                          errorBorder: borderTheme,
+                          disabledBorder: borderTheme,
+                          focusedErrorBorder: borderTheme,
+                          filled: true,
+                          hintText: "Enter Description here",
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(18),
+                        ),
+                      ),
+                    ),
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-              ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Align(
-              alignment: Alignment.topLeft,
-              child: Text("Select Community"),
-            ),
-            ref.watch(userCommunitiesProvider).when(
-                  data: (data) {
-                    communities = data;
-                    if (data.isEmpty) return const SizedBox();
+                  const Align(
+                    alignment: Alignment.topLeft,
+                    child: Text("Select Community"),
+                  ),
+                  ref.watch(userCommunitiesProvider).when(
+                        data: (data) {
+                          communities = data;
+                          if (data.isEmpty) return const SizedBox();
 
-                    return DropdownButton(
-                        borderRadius: BorderRadius.circular(15),
-                        value: selected ?? data[0],
-                        items: data
-                            .map((e) =>
-                                DropdownMenuItem(value: e, child: Text(e.name)))
-                            .toList(),
-                        onChanged: (val) {
-                          setState(() {
-                            selected = val;
-                          });
-                        });
-                  },
-                  error: (error, stackFrame) =>
-                      ErrorText(error: error.toString()),
-                  loading: () => const Loader(),
-                )
-          ],
-        ),
-      ),
+                          return DropdownButton(
+                              borderRadius: BorderRadius.circular(15),
+                              value: selected ?? data[0],
+                              items: data
+                                  .map((e) => DropdownMenuItem(
+                                      value: e, child: Text(e.name)))
+                                  .toList(),
+                              onChanged: (val) {
+                                setState(() {
+                                  selected = val;
+                                });
+                              });
+                        },
+                        error: (error, stackFrame) =>
+                            ErrorText(error: error.toString()),
+                        loading: () => const Loader(),
+                      )
+                ],
+              ),
+            ),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:reddit_app/core/constants/firebase_constants.dart';
 import 'package:reddit_app/core/failures.dart';
 import 'package:reddit_app/core/providers/firebase_providers.dart';
 import 'package:reddit_app/core/type_defs.dart';
+import 'package:reddit_app/models/community_model.dart';
 import 'package:reddit_app/models/post_model.dart';
 
 final postrepositoryProvider =
@@ -22,6 +23,32 @@ class PostRepository {
   FutureVoid addPost(Post post) async {
     try {
       return right(_posts.doc(post.id).set(post.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  Stream<List<Post>> fetchUserPosts(List<Community> community) {
+    return _posts
+        .where('communityName', whereIn: community.map((e) => e.name).toList())
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (event) => event.docs
+              .map(
+                (e) => Post.fromMap(
+                  e.data() as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        );
+  }
+
+  FutureVoid deletePost(Post post) async {
+    try {
+      return right(_posts.doc(post.id).delete());
     } on FirebaseException catch (e) {
       throw e.message!;
     } catch (e) {
