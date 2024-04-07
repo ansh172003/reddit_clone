@@ -6,8 +6,8 @@ class AddPostScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Column(
-      children: [Center(child: Text("Post Screen"))],
+    return const Wrap(
+      children: [Card()],
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:reddit_app/features/feed/screen/feed_screen.dart';
-import 'package:reddit_app/features/post/screen/post_screen.dart';
+import 'package:reddit_app/features/post/screen/add_post_screen.dart';
 
 class Constant {
   static String redditLogoPath = "assets/images/logo.png";
