@@ -5,7 +5,7 @@ import 'package:reddit_app/core/constants/constants.dart';
 import 'package:reddit_app/features/auth/controller/auth_controller.dart';
 import 'package:reddit_app/features/home/drawers/community_drawer.dart';
 import 'package:reddit_app/features/home/drawers/profile_drawer.dart';
-import 'package:reddit_app/models/delegates/search_comm_delegate.dart';
+import 'package:reddit_app/features/home/delegates/search_comm_delegate.dart';
 import 'package:reddit_app/theme/pallete.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {

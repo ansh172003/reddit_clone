@@ -6,6 +6,7 @@ import 'package:reddit_app/core/common/error_text.dart';
 import 'package:reddit_app/core/common/loader.dart';
 import 'package:reddit_app/core/utils.dart';
 import 'package:reddit_app/features/community/controller/community_controller.dart';
+import 'package:reddit_app/features/post/controller/post_controller.dart';
 import 'package:reddit_app/models/community_model.dart';
 import 'package:reddit_app/theme/pallete.dart';
 
@@ -47,6 +48,37 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
     }
   }
 
+  void sharePost() async {
+    if (widget.type == 'image' &&
+        bannerFile != null &&
+        titleController.text.isNotEmpty) {
+      ref.read(postControllerProvider.notifier).shareImagePost(
+            context: context,
+            title: titleController.text.trim(),
+            selected: selected ?? communities[0],
+            file: bannerFile,
+          );
+    } else if (widget.type == 'text' && titleController.text.isNotEmpty) {
+      ref.read(postControllerProvider.notifier).shareTextPost(
+            context: context,
+            description: descriptionController.text.trim(),
+            title: titleController.text.trim(),
+            selected: selected ?? communities[0],
+          );
+    } else if (widget.type == 'link' &&
+        titleController.text.isNotEmpty &&
+        linkController.text.isNotEmpty) {
+      ref.read(postControllerProvider.notifier).shareLinkPost(
+            context: context,
+            link: linkController.text.trim(),
+            title: titleController.text.trim(),
+            selected: selected ?? communities[0],
+          );
+    } else {
+      showSnackBar(context, 'Please enter all fields');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isTypeImage = widget.type == "image";
@@ -60,7 +92,7 @@ class _AddPostTypeScreenState extends ConsumerState<AddPostTypeScreen> {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: sharePost,
             child: const Text("Share"),
           ),
         ],
